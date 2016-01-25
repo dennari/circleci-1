@@ -9,6 +9,7 @@ class CircleCIRequest
     @url = "https://circleci.com/api/v1/"
     @auth = config.auth
     @request = require "request"
+    @debug = config.debug
 
   buildUrl: (path = "", query = {}, urlParams = {}) ->
     path = @injectParams path, urlParams
@@ -51,7 +52,9 @@ class CircleCIRequest
     config = @buildRequestConfig resource, opts
     # init request
     deferred = q.defer()
+    console.log config if @debug
     @request config, (err, res) =>
+      console.log res if @debug
       return deferred.reject err if err
       @handleResponse(deferred)(res)
     deferred.promise
